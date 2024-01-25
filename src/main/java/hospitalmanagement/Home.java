@@ -64,16 +64,12 @@ public class Home extends javax.swing.JFrame {
 
 //=============================================[CONSTRUCTOR WORK START]====================================================
     public Home() {
-        
-        initComponents();
-        
-        //make the frame of full page
-        this.setExtendedState(JFrame.MAXIMIZED_BOTH);
-        setLocationRelativeTo(null);
-        this.pack();
-        
         ImageIcon icon = new ImageIcon("./images/doctor_icon1.png");
         this.setIconImage(icon.getImage());
+        setSize(1100, 700);
+        setLocationRelativeTo(null);
+        initComponents();
+
         menu_panel.setBackground(new Color(0x021036));
 
         Dashboard.setLayout(new BorderLayout());
@@ -103,19 +99,11 @@ public class Home extends javax.swing.JFrame {
        // bookmarks_holding_panel.removeAll();
        // bookmarks_holding_panel.add(bookmark_panel , FlowLayout.TRAILING);
        
-       JPanel bk = new BookmarkPanel();
-//       prescrription_page_scroller.add(bk);
-       prescription_form_panel.add(bk);
-       //prescription_form_panel.add(new JPanel());
-      prescription_form_panel.revalidate();
-       prescription_form_panel.repaint();
-       
-       
-//       prescription_form_panel.setComponentZOrder(bk, WIDTH);
-//       prescription_form_panel.setC
- 
-         
-     
+       prescription_form_panel.add(new BookmarkPanel());
+
+       displayBookmark();
+
+
     }
 
 //=============================================[CONSTRUCTOR WORK ENDS]====================================================
@@ -574,7 +562,7 @@ public class Home extends javax.swing.JFrame {
 
     private void addMedicine() {
         String medicine_name = medicine_list.getSelectedValue();
-
+        System.out.println(medicine_list.getSelectedValue());
         if (medicine_name == null) {
             medicine_name = medicine_input.getText();
         }
@@ -588,6 +576,33 @@ public class Home extends javax.swing.JFrame {
 
         main_list.add(medicine_arraylist.get(total_medicine_selected), gbc);
         total_medicine_selected++;
+        validate();
+        repaint();
+    }
+    private void addBookmarkMedicine() {
+        String medicine_name = jList1.getSelectedValue();
+        System.out.println(jList1.getSelectedValue());
+        if (medicine_name == null) {
+            medicine_name = medicine_input.getText();
+        }
+        
+        Database database = Database.getInstance();
+        String text = medicine_input.getText();
+        ArrayList<String> medi = database.getLikeBookmarkMedicine(jList1.getSelectedValue());
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        gbc.weightx = 1;
+        gbc.weighty = -1;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        for(int i=0;i<medi.size();i++)
+        {
+            System.out.println(medi.get(i));
+            medicine_arraylist.add(new MedicineRowPanel(medi.get(i)));
+            main_list.add(medicine_arraylist.get(total_medicine_selected), gbc);
+            total_medicine_selected++;
+        }
+        
         validate();
         repaint();
     }
@@ -666,6 +681,22 @@ public class Home extends javax.swing.JFrame {
         prescription_male_btn = new javax.swing.JRadioButton();
         prescription_female_btn = new javax.swing.JRadioButton();
         save_and_print_btn = new javax.swing.JButton();
+
+        bookmark_panel = new javax.swing.JPanel();
+        jLabel7 = new javax.swing.JLabel();
+        jTextField1 = new javax.swing.JTextField();
+        jButton2 = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
+        jSeparator3 = new javax.swing.JSeparator();
+        jTextField2 = new javax.swing.JTextField();
+        jLabel15 = new javax.swing.JLabel();
+        jLabel16 = new javax.swing.JLabel();
+        jLabel17 = new javax.swing.JLabel();
+        jButton3 = new javax.swing.JButton();
+        jPanel3 = new javax.swing.JPanel();
+        jScrollPane4 = new javax.swing.JScrollPane();
+        jList1 = new javax.swing.JList<>();
+
         prescription_panel_head1 = new javax.swing.JPanel();
         patient_panel_header_title1 = new javax.swing.JLabel();
         Reports = new javax.swing.JPanel();
@@ -765,7 +796,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, headerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(heade_label, javax.swing.GroupLayout.PREFERRED_SIZE, 230, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 669, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1940, Short.MAX_VALUE)
                 .addComponent(doctor_icon_panel, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jLabel3)
@@ -803,7 +834,7 @@ public class Home extends javax.swing.JFrame {
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, footerLayout.createSequentialGroup()
                 .addContainerGap()
                 .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 1403, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 2151, Short.MAX_VALUE)
                 .addGroup(footerLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(footerLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
@@ -965,14 +996,13 @@ public class Home extends javax.swing.JFrame {
         Prescription.setForeground(new java.awt.Color(255, 255, 255));
         Prescription.setLayout(new java.awt.BorderLayout());
 
-        prescription_form_panel.setBackground(new java.awt.Color(204, 255, 255));
+        prescription_form_panel.setBackground(new java.awt.Color(255, 255, 0));
         prescription_form_panel.setAutoscrolls(true);
         prescription_form_panel.setPreferredSize(new java.awt.Dimension(1100, 700));
-        prescription_form_panel.setRequestFocusEnabled(false);
 
         prescription_form.setBackground(new java.awt.Color(251, 252, 224));
         prescription_form.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(0, 0, 0), 1, true));
-        prescription_form.setPreferredSize(new java.awt.Dimension(910, 541));
+        prescription_form.setPreferredSize(new java.awt.Dimension(910, 540));
 
         name_label16.setFont(new java.awt.Font("Segoe UI Emoji", 0, 14)); // NOI18N
         name_label16.setText("Name :-");
@@ -1118,26 +1148,16 @@ public class Home extends javax.swing.JFrame {
         prescription_male_btn.setBackground(new java.awt.Color(251, 252, 224));
         prescription_radio_btn_grp.add(prescription_male_btn);
         prescription_male_btn.setText("Male");
-        prescription_male_btn.setFocusPainted(false);
 
         prescription_female_btn.setBackground(new java.awt.Color(251, 252, 224));
         prescription_radio_btn_grp.add(prescription_female_btn);
         prescription_female_btn.setText("Female");
-        prescription_female_btn.setFocusPainted(false);
 
         save_and_print_btn.setBackground(new java.awt.Color(51, 102, 255));
         save_and_print_btn.setForeground(new java.awt.Color(255, 255, 255));
         save_and_print_btn.setText("save&print");
         save_and_print_btn.setBorder(new javax.swing.border.LineBorder(new java.awt.Color(255, 255, 255), 1, true));
         save_and_print_btn.setFocusable(false);
-        save_and_print_btn.addMouseListener(new java.awt.event.MouseAdapter() {
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                save_and_print_btnMouseEntered(evt);
-            }
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                save_and_print_btnMouseExited(evt);
-            }
-        });
         save_and_print_btn.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 save_and_print_btnActionPerformed(evt);
@@ -1148,6 +1168,53 @@ public class Home extends javax.swing.JFrame {
         prescription_form.setLayout(prescription_formLayout);
         prescription_formLayout.setHorizontalGroup(
             prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prescription_formLayout.createSequentialGroup()
+                .addGap(13, 13, 13)
+                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+
+                    .addGroup(prescription_formLayout.createSequentialGroup()
+                        .addComponent(jSeparator2)
+                        .addGap(25, 25, 25))
+                    .addGroup(prescription_formLayout.createSequentialGroup()
+
+                        .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prescription_formLayout.createSequentialGroup()
+                                    .addComponent(medicine_input, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(add_medicine_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(prescription_status_label, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(medicine_list_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(jLabel8))
+                        .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(prescription_formLayout.createSequentialGroup()
+                                .addGap(19, 19, 19)
+                                .addComponent(jLabel9)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+
+                                .addGap(137, 137, 137))
+                            .addGroup(prescription_formLayout.createSequentialGroup()
+                                .addGap(18, 18, 18)
+                                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(prescription_formLayout.createSequentialGroup()
+                                        .addGap(21, 21, 21)
+                                        .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(prescription_formLayout.createSequentialGroup()
+                                        .addComponent(prescription_delete_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(prescription_save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addGap(18, 18, 18)
+                                .addComponent(prescription_next_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(save_and_print_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(25, 25, 25))
+                            .addGroup(prescription_formLayout.createSequentialGroup()
+                                .addGap(37, 37, 37)
+                                .addComponent(selected_medicine_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addContainerGap())))))
+
             .addGroup(prescription_formLayout.createSequentialGroup()
                 .addContainerGap(48, Short.MAX_VALUE)
                 .addComponent(name_label16, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -1164,46 +1231,6 @@ public class Home extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(prescription_date_input, javax.swing.GroupLayout.PREFERRED_SIZE, 104, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 43, Short.MAX_VALUE))
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prescription_formLayout.createSequentialGroup()
-                .addGap(13, 13, 13)
-                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jSeparator2)
-                    .addGroup(prescription_formLayout.createSequentialGroup()
-                        .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prescription_formLayout.createSequentialGroup()
-                                    .addComponent(medicine_input, javax.swing.GroupLayout.PREFERRED_SIZE, 167, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(add_medicine_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(prescription_status_label, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(medicine_list_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 238, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                            .addComponent(jLabel8))
-                        .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(prescription_formLayout.createSequentialGroup()
-                                .addGap(19, 19, 19)
-                                .addComponent(jLabel9)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(112, 112, 112))
-                            .addGroup(prescription_formLayout.createSequentialGroup()
-                                .addGap(18, 18, 18)
-                                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(prescription_formLayout.createSequentialGroup()
-                                        .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                            .addGroup(prescription_formLayout.createSequentialGroup()
-                                                .addGap(21, 21, 21)
-                                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 219, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                            .addGroup(prescription_formLayout.createSequentialGroup()
-                                                .addComponent(prescription_delete_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 62, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                                .addComponent(prescription_save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                        .addGap(18, 18, 18)
-                                        .addComponent(prescription_next_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(18, 18, 18)
-                                        .addComponent(save_and_print_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 78, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addComponent(selected_medicine_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))))
-                .addGap(18, 18, 18))
         );
         prescription_formLayout.setVerticalGroup(
             prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1217,9 +1244,10 @@ public class Home extends javax.swing.JFrame {
                         .addComponent(name_label16, javax.swing.GroupLayout.PREFERRED_SIZE, 37, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(prescription_male_btn)
                         .addComponent(prescription_female_btn))
-                    .addComponent(prescription_date_input, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 18, Short.MAX_VALUE)
-                .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 9, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(prescription_formLayout.createSequentialGroup()
+                        .addComponent(prescription_date_input, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addGap(18, 18, 18)
                 .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(prescription_formLayout.createSequentialGroup()
@@ -1238,20 +1266,162 @@ public class Home extends javax.swing.JFrame {
                     .addComponent(medicine_list_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addComponent(selected_medicine_panel, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 274, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                .addComponent(jLabel10)
+                .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(prescription_formLayout.createSequentialGroup()
-                        .addComponent(jLabel10)
+                        .addGap(5, 5, 5)
+                        .addComponent(prescription_status_label, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(prescription_formLayout.createSequentialGroup()
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(prescription_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(prescription_save_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(prescription_next_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(save_and_print_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 33, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(prescription_delete_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(prescription_status_label, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addGap(61, 61, 61))
+                            .addComponent(prescription_delete_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(537, 537, 537))
         );
 
-        prescription_form_panel.add(prescription_form);
+        bookmark_panel.setBackground(new java.awt.Color(251, 252, 224));
+        bookmark_panel.setAutoscrolls(true);
+        bookmark_panel.setPreferredSize(new java.awt.Dimension(299, 528));
+
+        jLabel7.setText("Bookmark");
+
+        jButton2.setBackground(new java.awt.Color(0, 51, 255));
+        jButton2.setForeground(new java.awt.Color(255, 255, 255));
+        jButton2.setText("Add");
+        jButton2.setFocusPainted(false);
+
+        jButton1.setBackground(new java.awt.Color(255, 51, 51));
+        jButton1.setForeground(new java.awt.Color(255, 255, 255));
+        jButton1.setText("Delete");
+        jButton1.setFocusPainted(false);
+
+        jLabel15.setText("Add New Bookmark");
+
+        jLabel16.setText("Bookmark Name :-");
+
+        jLabel17.setText("Select the medicine from adjacent window");
+
+        jButton3.setBackground(new java.awt.Color(0, 0, 255));
+        jButton3.setForeground(new java.awt.Color(255, 255, 255));
+        jButton3.setText("Save");
+
+        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+            String[] strings = { "Item 1", "Item 2", "Item 3", "Item 4", "Item 5" };
+            public int getSize() { return strings.length; }
+            public String getElementAt(int i) { return strings[i]; }
+        });
+        jList1.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                jList1MouseClicked(evt);
+            }
+        });
+        jScrollPane4.setViewportView(jList1);
+
+        javax.swing.GroupLayout jPanel3Layout = new javax.swing.GroupLayout(jPanel3);
+        jPanel3.setLayout(jPanel3Layout);
+        jPanel3Layout.setHorizontalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addComponent(jScrollPane4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+        );
+        jPanel3Layout.setVerticalGroup(
+            jPanel3Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel3Layout.createSequentialGroup()
+                .addGap(0, 0, Short.MAX_VALUE)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+        );
+
+        javax.swing.GroupLayout bookmark_panelLayout = new javax.swing.GroupLayout(bookmark_panel);
+        bookmark_panel.setLayout(bookmark_panelLayout);
+        bookmark_panelLayout.setHorizontalGroup(
+            bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                .addGap(88, 88, 88)
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, bookmark_panelLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jButton3, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 267, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(bookmark_panelLayout.createSequentialGroup()
+                        .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bookmark_panelLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jSeparator3))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bookmark_panelLayout.createSequentialGroup()
+                                    .addContainerGap()
+                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 203, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(javax.swing.GroupLayout.Alignment.LEADING, bookmark_panelLayout.createSequentialGroup()
+                                    .addGap(12, 12, 12)
+                                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 154, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                                .addGap(72, 72, 72)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 123, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                                .addContainerGap()
+                                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                                .addGap(215, 215, 215)
+                                .addComponent(jButton1)))
+                        .addGap(0, 12, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        bookmark_panelLayout.setVerticalGroup(
+            bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(bookmark_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jPanel3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(4, 4, 4)
+                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 28, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator3, javax.swing.GroupLayout.PREFERRED_SIZE, 13, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(bookmark_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel16, javax.swing.GroupLayout.PREFERRED_SIZE, 32, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(18, 18, 18)
+                .addComponent(jLabel17)
+                .addGap(34, 34, 34)
+                .addComponent(jButton3, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(127, 127, 127))
+        );
+
+        javax.swing.GroupLayout prescription_form_panelLayout = new javax.swing.GroupLayout(prescription_form_panel);
+        prescription_form_panel.setLayout(prescription_form_panelLayout);
+        prescription_form_panelLayout.setHorizontalGroup(
+            prescription_form_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prescription_form_panelLayout.createSequentialGroup()
+                .addComponent(prescription_form, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(bookmark_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 305, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(998, Short.MAX_VALUE))
+        );
+        prescription_form_panelLayout.setVerticalGroup(
+            prescription_form_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(prescription_form_panelLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(prescription_form_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(bookmark_panel, javax.swing.GroupLayout.PREFERRED_SIZE, 530, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(prescription_form, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(494, Short.MAX_VALUE))
+        );
 
         Prescription.add(prescription_form_panel, java.awt.BorderLayout.CENTER);
 
@@ -1587,7 +1757,7 @@ public class Home extends javax.swing.JFrame {
         report_show_panel.setLayout(report_show_panelLayout);
         report_show_panelLayout.setHorizontalGroup(
             report_show_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 850, Short.MAX_VALUE)
+            .addGap(0, 1969, Short.MAX_VALUE)
         );
         report_show_panelLayout.setVerticalGroup(
             report_show_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1607,7 +1777,7 @@ public class Home extends javax.swing.JFrame {
         medical_report_panel.setLayout(medical_report_panelLayout);
         medical_report_panelLayout.setHorizontalGroup(
             medical_report_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1100, Short.MAX_VALUE)
+            .addGap(0, 2219, Short.MAX_VALUE)
         );
         medical_report_panelLayout.setVerticalGroup(
             medical_report_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1623,7 +1793,7 @@ public class Home extends javax.swing.JFrame {
         test_report_panel.setLayout(test_report_panelLayout);
         test_report_panelLayout.setHorizontalGroup(
             test_report_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1100, Short.MAX_VALUE)
+            .addGap(0, 2219, Short.MAX_VALUE)
         );
         test_report_panelLayout.setVerticalGroup(
             test_report_panelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1646,7 +1816,7 @@ public class Home extends javax.swing.JFrame {
         Dashboard.setLayout(DashboardLayout);
         DashboardLayout.setHorizontalGroup(
             DashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 1471, Short.MAX_VALUE)
+            .addGap(0, 2219, Short.MAX_VALUE)
         );
         DashboardLayout.setVerticalGroup(
             DashboardLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3192,14 +3362,22 @@ public class Home extends javax.swing.JFrame {
         prescription_save_btn.setBorder(new LineBorder(Color.BLACK, 2, true));
     }//GEN-LAST:event_prescription_save_btnMouseEntered
 
-    private void save_and_print_btnMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_save_and_print_btnMouseEntered
-       save_and_print_btn.setBorder(new LineBorder(Color.BLACK, 2, true));
-    }//GEN-LAST:event_save_and_print_btnMouseEntered
 
-    private void save_and_print_btnMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_save_and_print_btnMouseExited
-          save_and_print_btn.setBorder(HOVER_BTN_BORDER);
-    }//GEN-LAST:event_save_and_print_btnMouseExited
-
+    private void jList1MouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_jList1MouseClicked
+       if (evt.getClickCount() == 1) {
+            addBookmarkMedicine();
+        }
+    }//GEN-LAST:event_jList1MouseClicked
+public void displayBookmark()
+    {
+        Database database = Database.getInstance();
+        ArrayList<String> medi = database.getBookmark();
+        DefaultListModel lm= new DefaultListModel();
+        for (String m : medi) {
+            lm.addElement(m);
+        }
+        jList1.setModel(lm);
+    }
     /**
      * @param args the command line arguments
      */
@@ -3230,7 +3408,6 @@ public class Home extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                
                 new Home().setVisible(true);
             }
         });
@@ -3246,6 +3423,7 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JPanel all_reports_panel;
     private javax.swing.JTextField blood_pressure_input;
     private javax.swing.JCheckBox bodyache_chk;
+    private javax.swing.JPanel bookmark_panel;
     private javax.swing.JLabel cancle_click_here;
     private javax.swing.JLabel cancle_previous_editing_report_label;
     private javax.swing.JLabel click_here;
@@ -3265,12 +3443,18 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JCheckBox headache_chk;
     private javax.swing.JLabel heade_label;
     private javax.swing.JPanel header;
+    private javax.swing.JButton jButton1;
+    private javax.swing.JButton jButton2;
+    private javax.swing.JButton jButton3;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
     private javax.swing.JLabel jLabel12;
     private javax.swing.JLabel jLabel13;
     private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
@@ -3278,11 +3462,17 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel6;
     private javax.swing.JLabel jLabel8;
     private javax.swing.JLabel jLabel9;
+    private javax.swing.JList<String> jList1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
+    private javax.swing.JPanel jPanel3;
     private javax.swing.JScrollPane jScrollPane2;
+    private javax.swing.JScrollPane jScrollPane4;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
+    private javax.swing.JSeparator jSeparator3;
+    private javax.swing.JTextField jTextField1;
+    private javax.swing.JTextField jTextField2;
     private javax.swing.JPanel main_panel;
     private javax.swing.JRadioButton male_radio_btn;
     private javax.swing.JLabel medical_report_label;
@@ -3356,5 +3546,6 @@ public class Home extends javax.swing.JFrame {
     private javax.swing.JCheckBox vomiting_chk;
     private javax.swing.JCheckBox weakness_chk;
     private javax.swing.JTextField weight_input;
+    private javax.swing.JLabel jLabel7;
     // End of variables declaration//GEN-END:variables
 }
