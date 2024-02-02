@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- Created with Jaspersoft Studio version 6.20.6.final using JasperReports Library version 6.20.6-5c96b6aa8a39ac1dc6b6bea4b81168e16dd39231  -->
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="null" pageWidth="410" pageHeight="595" columnWidth="370" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="d65db4a4-6d2a-4b06-b8b2-88a51dbe24ae">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<subDataset name="dataset1" uuid="46b61a2e-03fe-498f-8d04-7aa47a7f39b9"/>
+	<parameter name="pno" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[SELECT * FROM patient_reports INNER join pdetail on patient_reports.patient_no =$P{pno} and pdetail.pno=$P{pno};]]>
+	</queryString>
+	<field name="pno" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="date" class="java.sql.Timestamp">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="name" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="mno" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="gen" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="age" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="wht" class="java.lang.Integer">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="bp" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pls" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="pdis" class="java.lang.String">
+		<fieldDescription><![CDATA[]]></fieldDescription>
+	</field>
+	<field name="reports" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="90" splitType="Stretch"/>
+	</title>
+	<pageHeader>
+		<band height="96" splitType="Stretch">
+			<textField pattern="dd/MM/yyyy h.mm a">
+				<reportElement x="315" y="8" width="55" height="20" uuid="4e33c50d-0bc4-4d52-8770-9e09208a5c96"/>
+				<textFieldExpression><![CDATA[$F{date}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="8" width="44" height="20" uuid="d8ec4b7b-54ed-433e-aabf-f7b240445ee4"/>
+				<textFieldExpression><![CDATA[$F{pno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="71" y="50" width="90" height="20" uuid="3065e972-7a32-4c8c-92bb-5148d4bb71d7"/>
+				<textFieldExpression><![CDATA[$F{mno}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="252" y="30" width="36" height="20" uuid="c58fed8d-c7c1-4a9b-ad78-0a8139694e4f"/>
+				<textFieldExpression><![CDATA[$F{age}>0?$F{age}:"---"]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="330" y="30" width="36" height="20" uuid="87e6f038-c5fd-4858-93d4-04e68565d620"/>
+				<textFieldExpression><![CDATA[$F{wht}>0?$F{wht}:"---"]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="278" y="8" width="37" height="20" uuid="efac5722-9a6a-442f-939d-c217c92283e8"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Date :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="28" width="71" height="20" uuid="2186800d-5db9-4846-9092-86efd8662bfb"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Patient Name :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="50" width="71" height="20" uuid="cf3214bb-ffb7-4d30-b8cf-3e949304378e"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Mobile No      :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="226" y="30" width="26" height="20" uuid="3586c968-421e-4c4e-babc-5cc7a2e71abc"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Age :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="288" y="30" width="37" height="20" uuid="432095ca-1258-4e08-942e-4137f1d179e6"/>
+				<textElement>
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Weigth :]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="70" width="33" height="26" uuid="2ca24b32-802f-4467-9d8f-0450c18cca1b"/>
+				<textElement>
+					<font size="18" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Rx]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="71" y="30" width="117" height="20" uuid="0222fc72-d214-4561-b86d-b0215d96e6b3"/>
+				<textFieldExpression><![CDATA[$F{name}]]></textFieldExpression>
+			</textField>
+		</band>
+	</pageHeader>
+	<columnHeader>
+		<band height="22" splitType="Stretch">
+			<staticText>
+				<reportElement x="61" y="0" width="89" height="20" uuid="073cdef3-97f2-4227-b2f3-6b7d1fc3c669"/>
+				<textElement>
+					<font size="11" isBold="true"/>
+				</textElement>
+				<text><![CDATA[Report Name]]></text>
+			</staticText>
+		</band>
+	</columnHeader>
+	<detail>
+		<band height="32" splitType="Stretch">
+			<staticText>
+				<reportElement x="33" y="2" width="18" height="20" uuid="2408cd1c-109c-451e-a1df-198b418b7c37"/>
+				<textElement>
+					<font size="8"/>
+				</textElement>
+				<text><![CDATA[■]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="61" y="2" width="128" height="20" uuid="d220c1c1-234a-4a1a-af4d-80f44f3c06ad"/>
+				<textFieldExpression><![CDATA[$F{reports}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="11" splitType="Stretch"/>
+	</columnFooter>
+	<pageFooter>
+		<band height="13" splitType="Stretch"/>
+	</pageFooter>
+	<summary>
+		<band height="50" splitType="Stretch">
+			<image>
+				<reportElement x="308" y="0" width="50" height="30" uuid="41ae6095-03af-4822-9b73-10d44993624e"/>
+				<imageExpression><![CDATA["/sign.jpg"]]></imageExpression>
+			</image>
+			<staticText>
+				<reportElement x="296" y="30" width="74" height="20" uuid="c317552d-2b67-4202-ac2a-99c3971f8e56"/>
+				<text><![CDATA[Dr. Ajit Pawar]]></text>
+			</staticText>
+		</band>
+	</summary>
+</jasperReport>
