@@ -2,7 +2,6 @@ package hospitalmanagement;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.sql.Connection;
@@ -16,7 +15,6 @@ import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.KeyStroke;
 import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
@@ -64,22 +62,20 @@ public class TestReport extends javax.swing.JPanel {
         setTestReportPatientDetailsObject(patientDetails);
         setReportOnReportInputField();
         addAllNavigationButtons();
-   
-        REPORTS_THREAD.start();
-       
-    }
 
-    public JTextField getName_report_inputs() {
-        return name_report_inputs;
+        REPORTS_THREAD.start();
+
     }
 
     public void addAllNavigationButtons() {
 
         String refresh_page_icon = "./images/refresh3.png";
         String back_page_icon = "./images/left_arrow.png";
+        String next_page_icon = "./images/right_arrow.png";
 
         report_refresh.add(new SetImageIcon(new ImageIcon(refresh_page_icon), 30, 30), BorderLayout.CENTER);
         report_back.add(new SetImageIcon(new ImageIcon(back_page_icon), 25, 25), BorderLayout.CENTER);
+        report_next.add(new SetImageIcon(new ImageIcon(next_page_icon), 25, 25), BorderLayout.CENTER);
     }
 
     public void setTestReportPatientDetailsObject(PatientDetails patientDetails) {
@@ -116,7 +112,7 @@ public class TestReport extends javax.swing.JPanel {
             System.out.println("Enter integer value only");
         }
 
-        name_report_inputs.setText(TEST_REPORT_PATIENT_DETAILS.getName());
+        name_report_input.setText(TEST_REPORT_PATIENT_DETAILS.getName());
         date_report_input.setDate(TEST_REPORT_PATIENT_DETAILS.getDate());
 
     }
@@ -168,7 +164,7 @@ public class TestReport extends javax.swing.JPanel {
         jLabel12 = new javax.swing.JLabel();
         pno_report_input = new javax.swing.JTextField();
         jLabel14 = new javax.swing.JLabel();
-        name_report_inputs = new javax.swing.JTextField();
+        name_report_input = new javax.swing.JTextField();
         jLabel13 = new javax.swing.JLabel();
         date_report_input = new com.toedter.calendar.JDateChooser();
         report_status = new javax.swing.JLabel();
@@ -185,6 +181,7 @@ public class TestReport extends javax.swing.JPanel {
         jLabel1 = new javax.swing.JLabel();
         generate_report = new javax.swing.JButton();
         report_refresh = new javax.swing.JPanel();
+        report_next = new javax.swing.JPanel();
         report_back = new javax.swing.JPanel();
         remove_selected_report_btn = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
@@ -231,18 +228,18 @@ public class TestReport extends javax.swing.JPanel {
 
         jLabel14.setText("Name:-");
 
-        name_report_inputs.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
-        name_report_inputs.addMouseListener(new java.awt.event.MouseAdapter() {
+        name_report_input.setFont(new java.awt.Font("Segoe UI", 1, 13)); // NOI18N
+        name_report_input.addMouseListener(new java.awt.event.MouseAdapter() {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                name_report_inputsMouseEntered(evt);
+                name_report_inputMouseEntered(evt);
             }
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                name_report_inputsMouseExited(evt);
+                name_report_inputMouseExited(evt);
             }
         });
-        name_report_inputs.addActionListener(new java.awt.event.ActionListener() {
+        name_report_input.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                name_report_inputsActionPerformed(evt);
+                name_report_inputActionPerformed(evt);
             }
         });
 
@@ -407,6 +404,22 @@ public class TestReport extends javax.swing.JPanel {
         });
         report_refresh.setLayout(new java.awt.BorderLayout());
 
+        report_next.setBackground(new java.awt.Color(251, 252, 224));
+        report_next.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        report_next.setPreferredSize(new java.awt.Dimension(25, 25));
+        report_next.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                report_nextMouseClicked(evt);
+            }
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                report_nextMouseExited(evt);
+            }
+            public void mouseReleased(java.awt.event.MouseEvent evt) {
+                report_nextMouseReleased(evt);
+            }
+        });
+        report_next.setLayout(new java.awt.BorderLayout());
+
         report_back.setBackground(new java.awt.Color(251, 252, 224));
         report_back.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
         report_back.setPreferredSize(new java.awt.Dimension(25, 25));
@@ -447,67 +460,68 @@ public class TestReport extends javax.swing.JPanel {
         test_report_form.setLayout(test_report_formLayout);
         test_report_formLayout.setHorizontalGroup(
             test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(test_report_formLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, test_report_formLayout.createSequentialGroup()
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
-                    .addComponent(report_list_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
-                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
-                                .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(date_report_input, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
-                                .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(test_report_formLayout.createSequentialGroup()
-                                        .addComponent(pno_report_input, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                        .addComponent(search_report, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addGap(0, 0, Short.MAX_VALUE))
-                                    .addComponent(name_report_inputs)))
-                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
-                                .addComponent(report_input, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(add_report_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(test_report_formLayout.createSequentialGroup()
+                        .addGap(42, 42, 42)
+                        .addComponent(report_status, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(test_report_formLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(remove_selected_report_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addGap(23, 23, 23))
+                        .addContainerGap()
+                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(jScrollPane1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                            .addComponent(report_list_panel, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
+                                .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
+                                        .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(date_report_input, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
+                                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 38, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                            .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 49, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(test_report_formLayout.createSequentialGroup()
+                                                .addComponent(pno_report_input, javax.swing.GroupLayout.PREFERRED_SIZE, 88, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                                .addComponent(search_report, javax.swing.GroupLayout.PREFERRED_SIZE, 63, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addGap(0, 0, Short.MAX_VALUE))
+                                            .addComponent(name_report_input)))
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, test_report_formLayout.createSequentialGroup()
+                                        .addComponent(report_input, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(add_report_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(jLabel5, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 72, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(0, 0, Short.MAX_VALUE))
+                            .addGroup(test_report_formLayout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(remove_selected_report_btn, javax.swing.GroupLayout.PREFERRED_SIZE, 58, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                .addGap(15, 15, 15))
             .addGroup(test_report_formLayout.createSequentialGroup()
+                .addContainerGap()
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(test_report_formLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(test_report_formLayout.createSequentialGroup()
-                                .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(print, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(generate_report, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                    .addGroup(test_report_formLayout.createSequentialGroup()
-                        .addGap(5, 5, 5)
                         .addComponent(report_back, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(report_status, javax.swing.GroupLayout.PREFERRED_SIZE, 162, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(report_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(81, 81, 81)
+                        .addComponent(report_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(68, 68, 68)
+                        .addComponent(report_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 95, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(test_report_formLayout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 68, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(print, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(generate_report, javax.swing.GroupLayout.PREFERRED_SIZE, 71, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 221, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap())
         );
         test_report_formLayout.setVerticalGroup(
             test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(test_report_formLayout.createSequentialGroup()
-                .addGap(18, 18, 18)
+                .addContainerGap()
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -516,7 +530,7 @@ public class TestReport extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(name_report_inputs, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(name_report_input, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -538,21 +552,21 @@ public class TestReport extends javax.swing.JPanel {
                     .addGroup(test_report_formLayout.createSequentialGroup()
                         .addGap(6, 6, 6)
                         .addComponent(remove_selected_report_btn, javax.swing.GroupLayout.DEFAULT_SIZE, 30, Short.MAX_VALUE)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(7, 7, 7)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(print, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(generate_report, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(report_status, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(report_refresh, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 29, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, test_report_formLayout.createSequentialGroup()
-                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(print, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(generate_report, javax.swing.GroupLayout.PREFERRED_SIZE, 31, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addGroup(test_report_formLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(report_status, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(report_back, javax.swing.GroupLayout.PREFERRED_SIZE, 25, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(176, Short.MAX_VALUE))
+                    .addComponent(report_next, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(report_back, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(report_refresh, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(264, Short.MAX_VALUE))
         );
 
         jPanel1.add(test_report_form, java.awt.BorderLayout.WEST);
@@ -610,21 +624,21 @@ public class TestReport extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_pno_report_inputKeyPressed
 
-    private void name_report_inputsMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputsMouseEntered
-        if (name_report_inputs.getBorder() != WARNING_BORDER) {
-            name_report_inputs.setBorder(HOVER_BORDER);
+    private void name_report_inputMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputMouseEntered
+        if (name_report_input.getBorder() != WARNING_BORDER) {
+            name_report_input.setBorder(HOVER_BORDER);
         }
-    }//GEN-LAST:event_name_report_inputsMouseEntered
+    }//GEN-LAST:event_name_report_inputMouseEntered
 
-    private void name_report_inputsMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputsMouseExited
-        if (name_report_inputs.getBorder() != WARNING_BORDER) {
-            name_report_inputs.setBorder(INPUT_BORDER);
+    private void name_report_inputMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputMouseExited
+        if (name_report_input.getBorder() != WARNING_BORDER) {
+            name_report_input.setBorder(INPUT_BORDER);
         }
-    }//GEN-LAST:event_name_report_inputsMouseExited
+    }//GEN-LAST:event_name_report_inputMouseExited
 
-    private void name_report_inputsActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name_report_inputsActionPerformed
+    private void name_report_inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name_report_inputActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_name_report_inputsActionPerformed
+    }//GEN-LAST:event_name_report_inputActionPerformed
 
     private void search_reportMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_search_reportMouseEntered
 
@@ -707,7 +721,6 @@ public class TestReport extends javax.swing.JPanel {
         report_input.setBorder(INPUT_BORDER);
     }//GEN-LAST:event_report_inputMouseExited
 
-    
     private void report_listMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_report_listMouseClicked
 
         if (evt.getClickCount() == 1) {
@@ -828,6 +841,18 @@ public class TestReport extends javax.swing.JPanel {
 
         }
     }//GEN-LAST:event_report_listKeyPressed
+
+    private void report_nextMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_report_nextMouseClicked
+        home.showReportOnWindow("Medical");
+    }//GEN-LAST:event_report_nextMouseClicked
+
+    private void report_nextMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_report_nextMouseExited
+        // TODO add your handling code here:
+    }//GEN-LAST:event_report_nextMouseExited
+
+    private void report_nextMouseReleased(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_report_nextMouseReleased
+        // TODO add your handling code here:
+    }//GEN-LAST:event_report_nextMouseReleased
     public void removeSelectedReport() {
 
         int index = selected_report_list.getSelectedIndex();
@@ -961,7 +986,7 @@ public class TestReport extends javax.swing.JPanel {
 
     public void resetReportPage() {
         pno_report_input.setText("");
-        name_report_inputs.setText("");
+        name_report_input.setText("");
         date_report_input.setDate(home.getCurrentDate());
         report_list.clearSelection();
         selected_report_list.clearSelection();
@@ -1013,7 +1038,7 @@ public class TestReport extends javax.swing.JPanel {
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
-    private javax.swing.JTextField name_report_inputs;
+    private javax.swing.JTextField name_report_input;
     private javax.swing.JTextField pno_report_input;
     private javax.swing.JPanel prescription_report_panel;
     private javax.swing.JButton print;
@@ -1022,6 +1047,7 @@ public class TestReport extends javax.swing.JPanel {
     private javax.swing.JTextField report_input;
     private javax.swing.JList<String> report_list;
     private javax.swing.JPanel report_list_panel;
+    private javax.swing.JPanel report_next;
     private javax.swing.JPanel report_refresh;
     private javax.swing.JPanel report_show_panel;
     private javax.swing.JLabel report_status;

@@ -5,7 +5,6 @@
 package hospitalmanagement;
 
 import java.awt.Color;
-import java.awt.Font;
 import java.awt.event.KeyEvent;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,7 +24,7 @@ public class PrescriptionReport extends javax.swing.JPanel {
     public PrescriptionReport() {
         initComponents();
     }
-    
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -413,15 +412,15 @@ public class PrescriptionReport extends javax.swing.JPanel {
     }//GEN-LAST:event_pno_report_inputKeyPressed
 
     private void name_report_inputMouseEntered(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputMouseEntered
-//      if(name_report_input_input.getBorder() != home.WARNING_BORDER) {
-//      name_report_input_input.setBorder(home.HOVER_BORDER);
-//        }
+        if (name_report_input.getBorder() != home.WARNING_BORDER) {
+            name_report_input.setBorder(home.HOVER_BORDER);
+        }
     }//GEN-LAST:event_name_report_inputMouseEntered
 
     private void name_report_inputMouseExited(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_name_report_inputMouseExited
-//      name_report_input_input.getBorder() != home.WARNING_BORDER) {
-//      name_report_input_input.setBorder(home.INPUT_BORDER);
-//        }
+        if (name_report_input.getBorder() != home.WARNING_BORDER) {
+            name_report_input.setBorder(home.INPUT_BORDER);
+        }
     }//GEN-LAST:event_name_report_inputMouseExited
 
     private void name_report_inputActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_name_report_inputActionPerformed
