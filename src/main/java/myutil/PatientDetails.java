@@ -15,8 +15,7 @@ public class PatientDetails {
             mobileno_input = "",
             bloodpressure_input = "120/80",
             pulse_input = "60",
-            sugar_input = "0",
-            email = null;
+            sugar_input = "0";
     int pid, age_input = 0;
     int weight_input = 0;
 
@@ -26,10 +25,6 @@ public class PatientDetails {
     public PatientDetails() {
     }
 
-    public void setEmail(String email)
-    {
-        this.email = email;
-    }
     public void setFees(Float fees) {
         this.fees = fees;
     }
@@ -97,7 +92,7 @@ public class PatientDetails {
     }
 
     public String getBloodPressure() {
-        return this.bloodpressure_input.trim();
+        return this.bloodpressure_input;
     }
 
     public String getPulse() {
@@ -138,10 +133,6 @@ public class PatientDetails {
 
     public String getName() {
         return this.name_input;
-    }
-    public String getEmail()
-    {
-        return this.email;
     }
 
 }

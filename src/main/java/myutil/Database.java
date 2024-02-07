@@ -11,19 +11,19 @@ import myutil.PatientDetails;
  */
 public class Database {
 
-    private final String url = "jdbc:mysql://localhost/guru";
-    private final String user = "root";
-    private final String password = "";
+    private final String url = "jdbc:postgresql://localhost:5432/guru";
+    private final String user = "postgres";
+    private final String password = "root";
 
     private static final String SELECT_ALL_QUERY = "select * from pdetail";
     private static final String UPDATE_USERS_SQL = "update pdetail set username = ? where id = ?;";
-    private static final String INSERT_RECORD_SQL = "INSERT INTO pdetail( pno,date, name, mno, gen, age, wht, bp, pls, pdis,email) VALUES (?,?,?,?,?,?,?,?,?,?,?);";
+    private static final String INSERT_RECORD_SQL = "INSERT INTO pdetail (pno, date, name, mno, gen, age, wht, bp, pls, pdis) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?);";
     private static final String GET_TOTAL_NO_OF_ROWS = "SELECT COUNT(NAME) FROM pdetail";
-    private static final String GET_TOTAL_MONTH_PATIENT = "select * from pdetail where MONTH(date) = MONTH(now()) and YEAR(date) = YEAR(now());";
-    private static final String GET_TOTAL_TODAY_PATIENT = "SELECT * FROM pdetail WHERE date = CURRENT_DATE+\" 00:00:00\"; ";
+    private static final String GET_TOTAL_MONTH_PATIENT = "SELECT * FROM pdetail WHERE EXTRACT(MONTH FROM date::date) = EXTRACT(MONTH FROM CURRENT_DATE) AND EXTRACT(YEAR FROM date::date) = EXTRACT(YEAR FROM CURRENT_DATE);";
+    private static final String GET_TOTAL_TODAY_PATIENT = "SELECT * FROM pdetail WHERE date::timestamp >= DATE_TRUNC('day', CURRENT_DATE);";
     private static final String GET_MEDI_PEDI = "SELECT* FROM pdetail,medi;";
     private static final String GET_MAX_INDEX = "SELECT MAX(pno) FROM pdetail;";
-    private static final String INSERT_MEDECINE_INFO = "INSERT INTO medi (pno, pname, medicin, mqty, mtime, ba, qty) VALUES (?,?,?,?,?,?,?);";
+    private static final String INSERT_MEDECINE_INFO = "INSERT INTO medi (pno, pname, medicin, mqty, mtime, ba, qty) VALUES (?, ?, ?, ?, ?, ?, ?);";
     private static final String FIND_PATIENT_BY_PNO = "select * from pdetail where pno = ?";
     private static final String FIND_MEDICINE_BY_PNO = "select * from medi where pno = ?";
     private static final String DELETE_MEDICINE_BY_PNO = "delete  from medi where pno =?";
@@ -35,24 +35,17 @@ public class Database {
     private static final String UPDATE_PATIENT_FEES = "UPDATE pdetail SET  fees_paid =? WHERE pno = ?";
 
     private static final String INSERT_MEDICINE = "INSERT INTO medilist (medicine) VALUES (?);";
-
-    private static final String INSERT_REPORT = "INSERT INTO patient_reports (patient_no, reports ,report_date) VALUES (?,?,?);";
-    private static final String DELETE_TEST_REPORT_BY_PNO = "delete  from patient_reports where patient_no =?";
-    private static final String GET_ALL_TEST_REPORTS = "SELECT *FROM patient_reports where patient_no=?";
-
+    
+    private static final String INSERT_REPORT = "INSERT INTO patient_reports (patient_no, reports) VALUES (?,?);";
+    private static final String DELETE_TEST_REPORT_BY_PNO  = "delete  from patient_reports where patient_no =?";
+    private static final String GET_ALL_TEST_REPORTS ="SELECT *FROM patient_reports where patient_no=?";
+    
     private static final String INSERT_REPORT_NAME = "INSERT INTO reports (report_name)VALUES (?);";
     private static final String INSERT_DOCTOR_NAME = "INSERT INTO doctor_names (doc_name) VALUES (?);";
     private static final String GET_ALL_DOCTOR_NAMES = "SELECT * FROM doctor_names";
     private static final String GET_DOCTOR_ID = "SELECT * FROM doctor_names where doc_name = ?";
-
-    private static final String INSERT_INTO_EMAIL = "INSERT INTO email (email_from, email_to, subject, body, template) VALUES (?,?,?,?,?)";
-
-    private static final String INSERT_INTO_EMAIL_TEMPLATE = "INSERT INTO email_template (template, subject, body, attach_file) VALUES (?, ?, ?, ?)";
-
-    private static final String DELETE_EMPLATE_TEMPLATE_BY_NAME = "delete  from email_template where template =?";
-    static Database singletone_database = null;
-    Connection connection = null;
-
+     static Database singletone_database = null;
+     Connection connection = null;
     //creates the database connection
     public Connection connect() {
         try {
@@ -223,7 +216,6 @@ public class Database {
                 patientdetails.setSymptoms(rs.getString("pdis"));
                 patientdetails.setWeight(rs.getString("wht"));
                 patientdetails.setMobileNo(rs.getString("mno"));
-                patientdetails.setEmail(rs.getString("email"));
 
                 String fees = rs.getString("fees_paid");
                 if (fees != null) {
@@ -314,7 +306,6 @@ public class Database {
 
         }
     }
-
     public void updatePatientMobileNo(PatientDetails patientdetails) {
 
         try {
@@ -406,9 +397,8 @@ public class Database {
             preparedStatement.setInt(7, patientdetails.getWeight());
             preparedStatement.setString(8, patientdetails.getBloodPressure());
             preparedStatement.setString(9, patientdetails.getPulse());
-
+//            preparedStatement.setString(9, patientdetails.getSugar());
             preparedStatement.setString(10, patientdetails.getSymptoms());
-            preparedStatement.setString(11, patientdetails.getEmail());
 
             preparedStatement.executeUpdate();
             //conn.commit();
@@ -429,8 +419,8 @@ public class Database {
             preparedStatement.setString(3, medicineDetails.getMedicineName());
             preparedStatement.setString(4, medicineDetails.getMedicineQuantity());
             preparedStatement.setString(5, medicineDetails.getMedicineTime());
-            preparedStatement.setString(6, medicineDetails.getMedicineMealTime());
-            preparedStatement.setString(7, medicineDetails.getTotalQuantity());
+            preparedStatement.setInt(6, medicineDetails.getMedicineMealTime());
+            preparedStatement.setInt(7, Integer.parseInt(medicineDetails.getTotalQuantity()));
 
             preparedStatement.executeUpdate();
             //conn.commit();
@@ -438,50 +428,49 @@ public class Database {
             System.out.println(e);
         }
     }
-
     public void insertMedicine(String medicine_name) {
         try {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_MEDICINE);
             preparedStatement.setString(1, medicine_name);
-
+            
             preparedStatement.executeUpdate();
             //conn.commit();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
+    
     //inserting test reports 
-    public void insertTestReport(int pno, String report_name, long date_in_time) {
+    public void insertTestReport(int pno , String report_name) {
         try {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_REPORT);
-            preparedStatement.setInt(1, pno);
+            preparedStatement.setInt(1,pno);
             preparedStatement.setString(2, report_name.toUpperCase());
-            preparedStatement.setDate(3, new Date(date_in_time));
-
+            
             preparedStatement.executeUpdate();
             //conn.commit();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
-    public void insertNewTestReportName(String report_name) {
+     public void insertNewTestReportName( String report_name) {
         try {
             Connection conn = connect();
-            PreparedStatement preparedStatement = conn.prepareStatement(INSERT_REPORT_NAME);
+            PreparedStatement preparedStatement = conn.prepareStatement( INSERT_REPORT_NAME);
             preparedStatement.setString(1, report_name);
-
+            
             preparedStatement.executeUpdate();
             //conn.commit();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
-    public void removeALlTestReport(int patient_number) {
+    
+   
+    public void removeALlTestReport(int patient_number)
+    {
         try {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(DELETE_TEST_REPORT_BY_PNO);
@@ -493,7 +482,6 @@ public class Database {
             System.out.println(e);
         }
     }
-
     public ArrayList<String> getLikeMedicine(String str) {
 
         ArrayList<String> medi = new ArrayList<String>();
@@ -514,152 +502,6 @@ public class Database {
                 i++;
             }
             return medi;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public ArrayList<String> getLikePatient(String str) {
-
-        ArrayList<String> patient_details = new ArrayList<>();
-
-        try {
-            Connection conn = connect();
-            StringBuffer GET_LIKE_PATIENT = new StringBuffer("SELECT * FROM pdetail WHERE name LIKE ");
-            GET_LIKE_PATIENT.append("\'");
-            GET_LIKE_PATIENT.append("%");
-            GET_LIKE_PATIENT.append(new StringBuffer(str.toUpperCase()));
-            GET_LIKE_PATIENT.append("%';");
-
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_PATIENT));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                String info = rs.getString("pno") + "/" + rs.getString("name") + "/" + (rs.getString("date").split(" "))[0];
-
-                patient_details.add(info);
-                i++;
-            }
-            return patient_details;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public ArrayList<String> getLikePatient(int patient_number) {
-
-        ArrayList<String> patient_details = new ArrayList<>();
-
-        try {
-            Connection conn = connect();
-            StringBuffer GET_LIKE_PATIENT = new StringBuffer("SELECT * FROM pdetail WHERE pno LIKE ");
-            GET_LIKE_PATIENT.append("\'");
-            GET_LIKE_PATIENT.append("%");
-            GET_LIKE_PATIENT.append(Integer.toString(patient_number));
-            GET_LIKE_PATIENT.append("%';");
-
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_PATIENT));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                String info = rs.getString("pno") + "/" + rs.getString("name") + "/" + (rs.getString("date").split(" "))[0];
-
-                patient_details.add(info);
-                i++;
-            }
-            return patient_details;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public ArrayList<String> getLikePatientByMobileNo(String mobile_number) {
-
-        ArrayList<String> patient_details = new ArrayList<>();
-
-        try {
-            Connection conn = connect();
-            StringBuffer GET_LIKE_PATIENT = new StringBuffer("SELECT * FROM pdetail WHERE mno LIKE ");
-            GET_LIKE_PATIENT.append("\'");
-            GET_LIKE_PATIENT.append("%");
-            GET_LIKE_PATIENT.append(mobile_number);
-            GET_LIKE_PATIENT.append("%';");
-
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_PATIENT));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                String info = rs.getString("pno") + "/" + rs.getString("name") + "/" + (rs.getString("date").split(" "))[0];
-
-                patient_details.add(info);
-                i++;
-            }
-            return patient_details;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public ArrayList<String> getLikePatientByGender(String gender) {
-
-        ArrayList<String> patient_details = new ArrayList<>();
-
-        try {
-            Connection conn = connect();
-            StringBuffer GET_LIKE_PATIENT = new StringBuffer("SELECT * FROM pdetail WHERE gen LIKE ");
-            GET_LIKE_PATIENT.append("\'");
-            GET_LIKE_PATIENT.append("%");
-            GET_LIKE_PATIENT.append(gender);
-            GET_LIKE_PATIENT.append("%';");
-
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_PATIENT));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                String info = rs.getString("pno") + "/" + rs.getString("name") + "/" + (rs.getString("date").split(" "))[0];
-
-                patient_details.add(info);
-                i++;
-            }
-            return patient_details;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public ArrayList<String> getLikePatientByDate(long date_in_time_format) {
-
-        ArrayList<String> patient_details = new ArrayList<>();
-
-        try {
-            Connection conn = connect();
-            Date date = new Date(date_in_time_format);
-            StringBuffer GET_LIKE_PATIENT = new StringBuffer("SELECT * FROM pdetail WHERE date LIKE ");
-            GET_LIKE_PATIENT.append("\'");
-            GET_LIKE_PATIENT.append("%");
-            GET_LIKE_PATIENT.append(date.toString());
-            GET_LIKE_PATIENT.append("%';");
-
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_PATIENT));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                String info = rs.getString("pno") + "/" + rs.getString("name") + "/" + (rs.getString("date").split(" "))[0];
-
-                patient_details.add(info);
-                i++;
-            }
-            return patient_details;
 
         } catch (SQLException e) {
             System.out.println(e);
@@ -836,35 +678,33 @@ public class Database {
         }
         return null;
     }
+    
+            
+     public ArrayList<String> getAllTestReportts(int patient_number) {
 
-    public ReportInfomartion getAllTestReports(int patient_number) {
-
-        ReportInfomartion test_report = new ReportInfomartion();
+        ArrayList<String> tests = new ArrayList<String>();
 
         try {
             Connection conn = connect();
+            
 
             PreparedStatement preparedStatement = conn.prepareStatement(GET_ALL_TEST_REPORTS);
-            preparedStatement.setInt(1, patient_number);
-
+             preparedStatement.setInt(1, patient_number);
+             
             ResultSet rs = preparedStatement.executeQuery();
-            //rs.getDate()
-            test_report.setPatientNumber(patient_number);
             int i = 0;
             while (rs.next()) {
-
-                test_report.setReportName(rs.getString("reports"));
-                test_report.setDate(rs.getDate("report_date"));
+                tests.add(rs.getString("reports"));
                 i++;
             }
-            if (i == 0) {
+            if(i==0) 
                 return null;
-            }
+            return tests;
 
         } catch (SQLException e) {
             System.out.println(e);
         }
-        return test_report;
+        return null;
     }
 
     public ArrayList<String> getLikeBookmarkMedicine(String str) {
@@ -875,7 +715,7 @@ public class Database {
             Connection conn = connect();
             StringBuffer GET_LIKE_MEDICINE = new StringBuffer("SELECT * FROM bookmark WHERE bname =");
             GET_LIKE_MEDICINE.append("\'");
-            GET_LIKE_MEDICINE.append(new StringBuffer(str));
+            GET_LIKE_MEDICINE.append(new StringBuffer(str.toUpperCase()));
             GET_LIKE_MEDICINE.append("\';");
 
             PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_MEDICINE));
@@ -939,12 +779,13 @@ public class Database {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_BOOKMARK);
 
-            preparedStatement.setString(1, bookmark_name);
+            preparedStatement.setString(1, bookmark_name.toUpperCase());
             preparedStatement.setString(2, medicineDetails.getMedicineName());
             preparedStatement.setString(3, medicineDetails.getMedicineQuantity());
             preparedStatement.setString(4, medicineDetails.getMedicineTime());
-            preparedStatement.setString(5, medicineDetails.getMedicineMealTime());
-            preparedStatement.setString(6, medicineDetails.getTotalQuantity());
+            preparedStatement.setInt(5, medicineDetails.getMedicineMealTime());
+            
+            preparedStatement.setInt(6, Integer.parseInt(medicineDetails.getTotalQuantity()));
 
             preparedStatement.executeUpdate();
             //conn.commit();
@@ -954,19 +795,20 @@ public class Database {
     }
 
 //    doctor related 
-    public void insertDoctorName(String doctor_name) {
-        try {
+    public void insertDoctorName(String doctor_name)
+    {
+         try {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(INSERT_DOCTOR_NAME);
-            preparedStatement.setString(1, doctor_name);
-
+            preparedStatement.setString(1, doctor_name.toUpperCase());
+            
             preparedStatement.executeUpdate();
             //conn.commit();
         } catch (SQLException e) {
             System.out.println(e);
         }
     }
-
+    
     public ArrayList<String> getAllDoctorNames(String str) {
 
         ArrayList<String> medi = new ArrayList<String>();
@@ -993,137 +835,29 @@ public class Database {
         }
         return null;
     }
-
+    
+    
+            
     public int getDoctorID(String doctor_name) {
         try {
             Connection conn = connect();
             PreparedStatement preparedStatement = conn.prepareStatement(GET_DOCTOR_ID);
-            preparedStatement.setString(1, doctor_name);
+            preparedStatement.setString(1, doctor_name.toUpperCase());
             ResultSet rs = preparedStatement.executeQuery();
-
-            rs.next();
-
-            return rs.getInt("doc_id");
-
+            if(rs==null)
+            {
+                            System.out.println("rs next");
+            }
+           // System.out.println(rs.getString("doc_name"));
+           rs.next();
+            System.out.println(rs.getString("doc_name"));
+            return Integer.parseInt(rs.getString("doc_id"));
+            //return 1;
+            
         } catch (SQLException e) {
             System.out.println(e);
         }
         return -1;
     }
-
-    //Email Related operations
-    public void insertEmail(EmailInformation emailInformation) {
-
-        try {
-            Connection conn = connect();
-            PreparedStatement preparedStatement = conn.prepareStatement(INSERT_INTO_EMAIL);
-
-            preparedStatement.setString(1, emailInformation.getSendFrom());
-
-            preparedStatement.setString(2, emailInformation.getSendTo());
-            preparedStatement.setString(3, emailInformation.getSubject());
-            preparedStatement.setString(4, emailInformation.getBody());
-            preparedStatement.setString(5, emailInformation.getTemplate());
-
-            preparedStatement.executeUpdate();
-            //conn.commit();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    public void insertEmailTemplate(EmailInformation emailInformation) {
-
-        try {
-            Connection conn = connect();
-            PreparedStatement preparedStatement = conn.prepareStatement(INSERT_INTO_EMAIL_TEMPLATE);
-
-            preparedStatement.setString(1, emailInformation.getTemplate());
-            preparedStatement.setString(2, emailInformation.getSubject());
-            preparedStatement.setString(3, emailInformation.getBody());
-            preparedStatement.setString(4, emailInformation.getAttachFilePath());
-
-            preparedStatement.executeUpdate();
-            //conn.commit();
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-    }
-
-    public ArrayList<String> getLikeTemplate(String template_name) {
-
-        ArrayList<String> template = new ArrayList<String>();
-
-        try {
-            Connection conn = connect();
-            StringBuffer GET_LIKE_EMAIL = new StringBuffer("SELECT  DISTINCT  subject ,template FROM email_template WHERE template LIKE ");
-
-            GET_LIKE_EMAIL.append("\'");
-            GET_LIKE_EMAIL.append("%");
-            GET_LIKE_EMAIL.append(new StringBuffer(template_name.toUpperCase()));
-            GET_LIKE_EMAIL.append("%';");
-            PreparedStatement preparedStatement = conn.prepareStatement(new String(GET_LIKE_EMAIL));
-            ResultSet rs = preparedStatement.executeQuery();
-            int i = 0;
-            while (rs.next()) {
-                //String str =rs.getString("template").toUpperCase()+" "+rs.getString("subject").toUpperCase();
-             ///  System.out.println(rs.getString("template").toUpperCase());
-                template.add(rs.getString("template").toUpperCase());
-              // template.add(str);
-                i++;
-            }
-            return template;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-
-    public EmailInformation getEmail(String template_name) {
-
-        try {
-            Connection conn = connect();
-            // Step 2:Create a statement using connection object
-            PreparedStatement preparedStatement = conn.prepareStatement("SELECT * FROM email_template where template = ?");
-            preparedStatement.setString(1, template_name);
-            // Step 3: Execute the query or update query
-            ResultSet rs = preparedStatement.executeQuery();
-            // Step 4: Process the ResultSet object.
-
-            while (rs.next()) {
-
-                EmailInformation emailInformation = new EmailInformation();
-                emailInformation.setTemplate(rs.getString("template"));
-                emailInformation.setSubject(rs.getString("subject"));
-                emailInformation.setBody(rs.getString("body"));
-                emailInformation.setAttachFilePath(rs.getString("attach_file"));
-                return emailInformation;
-            }
-
-        } catch (SQLException e) {
-            System.out.println(e);
-        }
-        return null;
-    }
-    public boolean removeTemplate(String template_name) {
-        try {
-            
-            Connection conn = connect();
-            PreparedStatement preparedStatement = conn.prepareStatement(DELETE_EMPLATE_TEMPLATE_BY_NAME);
-            preparedStatement.setString(1, template_name);
-
-            preparedStatement.executeUpdate();
-            return true;
-
-        } catch (SQLException e) {
-            System.out.println(e);
-             return false;
-        }
-    }
-
-    public String getEmail(int patient_number) {
-        return getPatientDetails(patient_number).getEmail();
-    }
-
+       
 }

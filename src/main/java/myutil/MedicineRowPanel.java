@@ -7,8 +7,6 @@ import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import javax.swing.ButtonGroup;
@@ -99,7 +97,7 @@ public class MedicineRowPanel extends JPanel implements MouseListener, ItemListe
         add(p, BorderLayout.CENTER);
 
         Font marathi_bold = new Font("Mangal", Font.BOLD, 12);
-        // medicine_name.setFont(marathi_bold);
+       // medicine_name.setFont(marathi_bold);
 
     }
 
@@ -147,8 +145,8 @@ public class MedicineRowPanel extends JPanel implements MouseListener, ItemListe
         afternoon_chk.setSelected(medicineDetails.afternoon);
         evening_chk.setSelected(medicineDetails.evening);
 
-        String meal_time = medicineDetails.getMedicineMealTime();
-        if (meal_time.equalsIgnoreCase("1")) {
+        int meal_time = medicineDetails.getMedicineMealTime();
+        if (meal_time==1) {
             before.setSelected(true);
             after.setSelected(false);
         } else {
@@ -213,7 +211,6 @@ public class MedicineRowPanel extends JPanel implements MouseListener, ItemListe
         p.setEndColor(new Color(204, 204, 255));
         this.setBackground(new Color(255, 51, 51));
         System.out.println("clicked");
-        total_tablet.setText("");
     }
 
     @Override
@@ -229,7 +226,6 @@ public class MedicineRowPanel extends JPanel implements MouseListener, ItemListe
         // ((MedicineRowPanel)e.getSource()).setBackground(new Color(255, 0, 255));
         p.setEndColor(new Color(204, 204, 255));
         this.setBackground(new Color(255, 51, 51));
-
     }
 
     @Override
