@@ -57,14 +57,14 @@ public class MedicineDetails {
     {
         this.before=before;
     }
-    public int getMedicineMealTime()
+    public String getMedicineMealTime()
     {
         if(this.before==true)
         {
-            return 1;
+            return "1";
         }
         else{
-            return 0;
+            return "0";
         }
     }
    
