@@ -1,5 +1,6 @@
 package auth;
 
+import email.SendingEmailWithoutAttachment;
 import email.SendingOtp;
 import java.util.Random;
 
@@ -29,7 +30,7 @@ public class VerificationCode {
     
     public String getRandomCode() {
         Random rand = new Random();
-        String num = Integer.toString(rand.nextInt(1000000 - 100000) + 100000);
+        String num = Integer.toString(rand.nextInt(100000));
         return num;
     }
 
