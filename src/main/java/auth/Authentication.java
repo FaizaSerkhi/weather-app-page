@@ -1,6 +1,5 @@
 package auth;
 
-import email.SendingEmailWithoutAttachment;
 import hospitalmanagement.Home;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -12,15 +11,13 @@ import java.util.Locale;
 import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import database.Database;
-import database.DatabaseConfig;
-import database.UserDatabase;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import net.miginfocom.swing.MigLayout;
 import org.jdesktop.animation.timing.Animator;
 import org.jdesktop.animation.timing.TimingTarget;
 import org.jdesktop.animation.timing.TimingTargetAdapter;
-
+import EmailTemplates.*;
+import email.SendingHtmlMail;
+import email.SendingOtp;
 public class Authentication extends javax.swing.JFrame {
 
     private final DecimalFormat df = new DecimalFormat("##0.###", DecimalFormatSymbols.getInstance(Locale.US));
@@ -32,11 +29,12 @@ public class Authentication extends javax.swing.JFrame {
     private final double coverSize = 45;
     private final double loginSize = 60;
 
-//    Home home;
-    public Authentication() {
+    Home home;
+
+    public Authentication(Home home) {
         // setLookAndFeel();
         initComponents();
-//        this.home = home;
+        this.home = home;
 
         ImageIcon icon = new ImageIcon("./images/doctor_icon1.png");
         this.setIconImage(icon.getImage());
@@ -155,34 +153,20 @@ public class Authentication extends javax.swing.JFrame {
         } else {
 
             initSendVerificationThread(user);
-          
             if (loginAndRegister.isSignUpBtnMode()) {
                 loginAndRegister.addVerificationCodeUI();
                 new Thread(sendVerificationThread).start();
-           
             } else if (loginAndRegister.isSubmitBtnMode()) {
 
                 boolean status = loginAndRegister.verifyEnteredCode(verificationCode.getCode());
 
                 if (status) {
                     if (user.getEmail().length() != 0) {
-                        UserDatabase db = UserDatabase.getInstance();
+                        Database db = Database.getInstance();
 
                         if (db.insertNewUser(user)) {
                             showMessage(Message.MessageType.SUCCESS, "Register sucess");
                             loginAndRegister.resetRegistrationPage();
-
-                            Runnable create_db = () -> {
-                                user = db.isValidUserByName(user);
-                                String db_name ="db_" + String.valueOf(user.getUserId());
-                                if (DatabaseConfig.initNewDatabase(user)) {                                    
-                                    user.setDatabase_name(db_name);
-                                    db.updateUserDatabase(user);
-                                }
-                                
-                            };
-                            new Thread(create_db).start();
-
                         } else {
                             showMessage(Message.MessageType.ERROR, "Error Register");
 
@@ -225,7 +209,7 @@ public class Authentication extends javax.swing.JFrame {
 
     private void loginBtnAction() {
 
-        UserDatabase db = UserDatabase.getInstance();
+        Database db = Database.getInstance();
         User login_page_user = loginAndRegister.getLoginUser();
         if (login_page_user.getEmail() == null || login_page_user.getPassword() == null) {
             showMessage(Message.MessageType.ERROR, "Enter All the details first");
@@ -237,37 +221,10 @@ public class Authentication extends javax.swing.JFrame {
             if (login_user != null) {
 
                 showMessage(Message.MessageType.SUCCESS, "Login successful");
-                 
-                Runnable create_db = () -> {
-                    if (DatabaseConfig.LoadDatabase(login_user)) {                       
-                       Home home = new Home(login_user);
-                        
-                        try {
-                            showMessage(Message.MessageType.SUCCESS, "Loding database...");
-                            Thread.sleep(1000);
-                            this.dispose();
-                            showMessage(Message.MessageType.SUCCESS, "Completed..");
-                            Thread.sleep(100);
-                            home.setVisible(true);
-                        } catch (InterruptedException ex) {
-                            
-                        }
-                        
-                    }
+                this.home.setUserForHome(login_user);
+                this.home.setVisible(true);
+                this.dispose();
 
-                };
-                Thread th = new Thread(create_db);             
-                th.start();
-             
-//                Runnable ui =()->{
-//                  
-//                };
-                
-//                Thread ui_th = new Thread(ui);
-//                synchronized(th){
-//                    ui_th.start();
-//                }
-                
             } else {
                 showMessage(Message.MessageType.ERROR, "Enter Valid Details");
             }
@@ -276,25 +233,25 @@ public class Authentication extends javax.swing.JFrame {
     }
 
     private void forgotBtnAction() {
-        UserDatabase db = UserDatabase.getInstance();
+        Database db = Database.getInstance();
         User login_page_user = loginAndRegister.getLoginUser();
         if (login_page_user.getEmail() == null || login_page_user.getUserName() == null || login_page_user.getPassword() == null) {
             showMessage(Message.MessageType.ERROR, "Enter All the details first");
         } else {
             User login_user = db.isValidUserByName(login_page_user);
             if (login_user != null) {
-
+                
                 String to = login_page_user.getEmail();
                 String subject = "Healix Password";
-                String message = "Your password updated successfully";
+                String message = UpdatePassword.getHtml(login_page_user.getUserName());
 
                 if (db.updateUserAccountPassword(login_page_user)) {
-                    SendingEmailWithoutAttachment sendPasswordToEmail = new SendingEmailWithoutAttachment(to, subject, message);
+                    SendingHtmlMail sendPasswordToEmail = new SendingHtmlMail(to, subject, message);
                     sendPasswordToEmail.usingAdminEmail();
                     sendPasswordToEmail.start();
                     showMessage(Message.MessageType.SUCCESS, "Password Update Successfully");
                     loginAndRegister.resetLogin();
-
+                
                 } else {
                     showMessage(Message.MessageType.ERROR, "No Details found");
                 }

@@ -1,4 +1,4 @@
-package pdfviewer;
+package database;
 
 import java.io.ByteArrayInputStream;
 import java.io.ByteArrayOutputStream;

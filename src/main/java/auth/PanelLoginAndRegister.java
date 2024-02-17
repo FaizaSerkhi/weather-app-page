@@ -269,9 +269,9 @@ public class PanelLoginAndRegister extends javax.swing.JLayeredPane {
             password = null;
         }
 
-        user.setEmail(email.trim());
-        user.setUserName(username.trim());
-        user.setPassword(password.trim());
+        user.setEmail(email);
+        user.setUserName(username);
+        user.setPassword(password);
     }
 
     public boolean isSubmitBtnMode() {

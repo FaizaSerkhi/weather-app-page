@@ -32,7 +32,6 @@ import javax.swing.border.LineBorder;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import database.Database;
-import database.DatabaseConfig;
 import reports.Document;
 import myutil.GradientPanel;
 import myutil.*;
@@ -50,7 +49,7 @@ public class Home extends javax.swing.JFrame {
 
     PatientDetails PATIENT_DETAILS = null;
     MultithredingReports REPORTS_THREAD = new MultithredingReports();
-    int total_medicine_selected = 0;
+    static int total_medicine_selected = 0;
 
     public final LineBorder HOVER_BTN_BORDER = new LineBorder(new Color(0x7C7CF1), 2, true);
     public final LineBorder DEFAULT_BTN_BORDER = new LineBorder(Color.WHITE, 1, true);
@@ -100,7 +99,7 @@ public class Home extends javax.swing.JFrame {
     Document document;
 
 //=============================================[CONSTRUCTOR WORK START]====================================================
-    public Home(User user) {
+    public Home() {
         /**
          * All the reports pree compiled which increases the speed of report generation
          * this report thread will do that task
@@ -178,7 +177,8 @@ public class Home extends javax.swing.JFrame {
         };
         
         Runnable email_thread = ()-> {
-            
+            email_panel = new Email();
+            EmailPage.add(email_panel, BorderLayout.CENTER);
 
         };
 
@@ -205,15 +205,6 @@ public class Home extends javax.swing.JFrame {
             
         };
 
-        Runnable user_th = ()->{
-            setUserForHome(user);
-            email_panel = new Email();
-            EmailPage.add(email_panel, BorderLayout.CENTER);
-            email_panel.setUserOnEmailPage(user);
-        };
-        
-        new Thread(user_th).start();
-        
         new Thread(first).start();
 
         new Thread(other).start();
@@ -265,7 +256,7 @@ public class Home extends javax.swing.JFrame {
          * This function will the the current user details on the email page
          * form this user can perform all the email related services
          */
-       
+        email_panel.setUserOnEmailPage(user);
         
        /**
         * This function will set the user details into the user_log.txt  
@@ -3780,7 +3771,7 @@ public class Home extends javax.swing.JFrame {
     }//GEN-LAST:event_prescription_next_btnMouseEntered
     //===================================================[PRESCRIPTION PAGE NEXT BUTTON ENDS]============================================================
 
-    boolean new_patient = true;
+    static boolean new_patient = true;
 
     public boolean savePrescriptionPatientDetails() {
         //the patient object details passed onto the prescrtion page when we click on next button of patient page
@@ -4860,12 +4851,9 @@ public class Home extends javax.swing.JFrame {
 
     private void logout_icon_panelMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_logout_icon_panelMouseClicked
         this.dispose();
-        new Authentication().setVisible(true);
+        new Authentication(new Home()).setVisible(true);
         LOGIN_USER = null;
         Log.removeUserLog();
-       
-       Database.getInstance().closeConnection();
-       DatabaseConfig.closeDestinationConnection();
     }//GEN-LAST:event_logout_icon_panelMouseClicked
 
     private void new_patient_dropdownMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_new_patient_dropdownMouseClicked

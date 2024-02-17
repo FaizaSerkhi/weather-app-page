@@ -1,5 +1,10 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
+ */
 package email;
 
+import EmailTemplates.OtpVerification;
 import static email.SendingEmail.from;
 import static email.SendingEmail.session;
 import javax.mail.Message;
@@ -7,18 +12,17 @@ import javax.mail.MessagingException;
 import javax.mail.Transport;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
-import EmailTemplates.OtpVerification;
 
 /**
  *
  * @author codew
  */
-public class SendingOtp extends SendingEmail {
+public class SendingHtmlMail extends SendingEmail {
 
     String to, subject, message;
     private boolean status = false;
 
-    public SendingOtp(String to, String subject, String message) {
+    public SendingHtmlMail(String to, String subject, String message) {
         this.to = to;
         this.subject = subject;
         this.message = message;
@@ -37,7 +41,7 @@ public class SendingOtp extends SendingEmail {
             msg.addRecipient(Message.RecipientType.TO, new InternetAddress(this.to));
             msg.setSubject(this.subject);
             msg.setText(this.message);
-            msg.setContent(OtpVerification.getHtml(message), "text/html");
+            msg.setContent(this.message, "text/html");
             Transport.send(msg);
             System.out.println("Email send successfully");
             status = true;

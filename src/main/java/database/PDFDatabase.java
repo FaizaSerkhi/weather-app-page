@@ -1,7 +1,5 @@
 package database;
 
-import pdfviewer.DocumentInformation;
-import pdfviewer.PDFUtility;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.sql.Connection;
