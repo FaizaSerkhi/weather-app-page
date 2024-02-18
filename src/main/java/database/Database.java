@@ -17,10 +17,6 @@ import sha.SHA;
  */
 public class Database {
 
-    private final String url = "jdbc:postgresql://localhost:5432/guru";
-    private final String user = "postgres";
-    private final String password = "root";
-
     /**
      * Patient Related All queries
      */
